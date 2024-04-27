@@ -6,7 +6,7 @@
 #    By: vpeinado <victor@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/26 16:29:54 by vpeinado          #+#    #+#              #
-#    Updated: 2024/04/26 22:36:45 by vpeinado         ###   ########.fr        #
+#    Updated: 2024/04/27 15:41:14 by vpeinado         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,18 +41,18 @@ EXEC_PATH	= exec/
 BUILTIN_PATH= builtin/
 PARSE_PATH	= parse/
 SRC 	= main.c env.c exit.c heredoc.c signals.c utils.c\
-			ft_cd.c ft_echo.c ft_env.c \
-			ft_exit.c ft_export.c ft_pwd.c ft_unset.c \
-			main_exec.c utils_exec.c \
-			commands.c errors_parse.c expand_utils.c expand.c \
-			extract.c parse_utils.c parse.c split_args.c 
+			builtins/ft_cd.c builtins/ft_echo.c builtins/ft_env.c \
+			builtins/ft_exit.c builtins/ft_export.c builtins/ft_pwd.c builtins/ft_unset.c \
+			exec/main_exec.c exec/utils_exec.c \
+			parse/commands.c parse/errors_parse.c parse/expand_utils.c parse/expand.c \
+			parse/extract.c parse/parse_utils.c parse/parse.c parse/split_args.c 
 SRCS	= $(addprefix $(SRC_PATH), $(SRC))
 
 #Object files
 OBJ_PATH	= obj/
-OBJ_EXEC	= obj/exec/
-OBJ_BUILTIN	= obj/builtin/
-OBJ_PARSE	= obj/parse/
+BUILTIN_PATH= builtins/
+EXEC_PATH	= exec/
+PARSE_PATH	= parse/
 OBJ		= $(SRC:.c=.o)
 OBJS 	= $(addprefix $(OBJ_PATH), $(OBJ))
 			
@@ -60,8 +60,10 @@ OBJS 	= $(addprefix $(OBJ_PATH), $(OBJ))
 all: obj $(LIBFT) $(NAME) 
 
 obj:
-	@mkdir -p $(@OBJ_PATH) $(OBJ_EXEC) $(OBJ_BUILTIN) $(OBJ_PARSE)
-
+	@mkdir -p $(OBJ_PATH)
+	@mkdir -p $(OBJ_PATH)$(EXEC_PATH)
+	@mkdir -p $(OBJ_PATH)$(BUILTIN_PATH)
+	@mkdir -p $(OBJ_PATH)$(PARSE_PATH)	
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c | $(OBJ_PATH)
 	@$(CC) $(CFLAGS) $(INC) -c $< -o $@ 
 
