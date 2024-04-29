@@ -6,7 +6,7 @@
 #    By: vpeinado <victor@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/26 16:29:54 by vpeinado          #+#    #+#              #
-#    Updated: 2024/04/27 15:41:14 by vpeinado         ###   ########.fr        #
+#    Updated: 2024/04/29 23:57:30 by vpeinado         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,44 +31,35 @@ RM		= rm -f
 INC			= -I ./inc/
 
 #Libft
-LIBFT_PATH	= libft/
+LIBFT_DIR	= libft/
 LIBFT_NAME	= libft.a
-LIBFT		= $(LIBFT_PATH)$(LIBFT_NAME)
+LIBFT		= $(LIBFT_DIR)$(LIBFT_NAME)
 
 #Source files
-SRC_PATH	= src/
-EXEC_PATH	= exec/
-BUILTIN_PATH= builtin/
-PARSE_PATH	= parse/
-SRC 	= main.c env.c exit.c heredoc.c signals.c utils.c\
-			builtins/ft_cd.c builtins/ft_echo.c builtins/ft_env.c \
-			builtins/ft_exit.c builtins/ft_export.c builtins/ft_pwd.c builtins/ft_unset.c \
-			exec/main_exec.c exec/utils_exec.c \
-			parse/commands.c parse/errors_parse.c parse/expand_utils.c parse/expand.c \
-			parse/extract.c parse/parse_utils.c parse/parse.c parse/split_args.c 
-SRCS	= $(addprefix $(SRC_PATH), $(SRC))
+SRC_DIR	= src/
+EXEC_DIR	= exec/
+BUILTIN_DIR= builtins/
+PARSE_DIR	= parse/
+SRC 	= $(shell find src -type f -iname "*.c" | sed 's|^src/||')
 
 #Object files
-OBJ_PATH	= obj/
-BUILTIN_PATH= builtins/
-EXEC_PATH	= exec/
-PARSE_PATH	= parse/
+OBJ_DIR	= obj/
 OBJ		= $(SRC:.c=.o)
-OBJS 	= $(addprefix $(OBJ_PATH), $(OBJ))
+OBJS 	= $(addprefix $(OBJ_DIR), $(OBJ))
 			
 
 all: obj $(LIBFT) $(NAME) 
 
 obj:
-	@mkdir -p $(OBJ_PATH)
-	@mkdir -p $(OBJ_PATH)$(EXEC_PATH)
-	@mkdir -p $(OBJ_PATH)$(BUILTIN_PATH)
-	@mkdir -p $(OBJ_PATH)$(PARSE_PATH)	
-$(OBJ_PATH)%.o: $(SRC_PATH)%.c | $(OBJ_PATH)
+	@mkdir -p $(OBJ_DIR)
+	@mkdir -p $(OBJ_DIR)$(EXEC_DIR)
+	@mkdir -p $(OBJ_DIR)$(BUILTIN_DIR)
+	@mkdir -p $(OBJ_DIR)$(PARSE_DIR)	
+$(OBJ_DIR)%.o: $(SRC_DIR)%.c | $(OBJ_DIR)
 	@$(CC) $(CFLAGS) $(INC) -c $< -o $@ 
 
 $(LIBFT):
-	@make -sC $(LIBFT_PATH)
+	@make -sC $(LIBFT_DIR)
 
 #push $(OFLAGS) after $Cflags
 $(NAME): $(OBJS)
@@ -76,13 +67,13 @@ $(NAME): $(OBJS)
 	@printf "$(GREEN)Minishell: OK!$(RESET)\n"
 
 clean:
-	@rm -Rf $(OBJ_PATH)
-	@make clean -C $(LIBFT_PATH)
+	@rm -Rf $(OBJ_DIR)
+	@make clean -sC $(LIBFT_DIR)
 	@printf "$(YELLOW)Object files: $(RED)Deleted!$(RESET)\n"
 
 fclean: clean
 	@rm -f $(NAME)
-	@rm -f $(LIBFT_PATH)$(LIBFT_NAME)
+	@rm -f $(LIBFT_DIR)$(LIBFT_NAME)
 	@printf "$(YELLOW)Minishell: $(RED)Deleted!$(RESET)\n"
 
 re: fclean all
